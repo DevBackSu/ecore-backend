@@ -11,7 +11,7 @@ function login(client_id) {
       } else {
         console.log(db_data[0].cnt);
         if (db_data[0].cnt == 0) {
-          const resData = { "success": true, "jwt_token": null, "is_new": true }; // 여기처럼 😀
+          const resData = { "success": true, "jwt_token": null, "is_new": true };
 
           resolve(resData);
         } else {
@@ -22,7 +22,7 @@ function login(client_id) {
             } else {
               const resData = { "success": true, "jwt_token": db_data[0].jwt_token, "is_new": false }; // 여기처럼 😀
               console.log(resData);
-              resolve(resData); // client_id 를 가지고 user search 해서 tokenrㄱㅂ사 돌려줘
+              resolve(resData); 
             }
           }); 
         }
