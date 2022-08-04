@@ -11,6 +11,7 @@ var commonRouter = require('./routes/common');
 var dailychallengeRouter = require('./routes/dailychallenge');
 var campaignRouter = require('./routes/campaign');
 const { challenge } = require('./DAO/challengeDAO');
+var fileRouter = require('./routes/file');
 
 var app = express();
 
@@ -30,6 +31,7 @@ app.use('/challenge',challengeRouter);
 app.use('/dailychallenge',dailychallengeRouter);
 app.use('/user',userRouter);
 app.use('/campaign',campaignRouter);
+app.use('/upload',fileRouter);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
