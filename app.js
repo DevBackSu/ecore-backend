@@ -4,13 +4,19 @@ var path = require('path');
 var cookieParser = require('cookie-parser');
 var logger = require('morgan');
 
+var authRouter = require('./routes/auth');
 var challengeRouter = require('./routes/challenge');
+var userRouter = require('./routes/user');
+var commonRouter = require('./routes/common');
+var dailychallengeRouter = require('./routes/dailychallenge');
+var campaignRouter = require('./routes/campaign');
+const { challenge } = require('./DAO/challengeDAO');
 
 var app = express();
 
-// view engine setup
-app.set('views', path.join(__dirname, 'views'));
-app.set('view engine', 'ejs');
+// // view engine setup
+// app.set('views', path.join(__dirname, 'views'));
+// app.set('view engine', 'ejs');
 
 app.use(logger('dev'));
 app.use(express.json());
@@ -18,7 +24,12 @@ app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
+app.use('/',commonRouter);
+app.use('/auth',authRouter);
 app.use('/challenge',challengeRouter);
+app.use('/dailychallenge',dailychallengeRouter);
+app.use('/user',userRouter);
+app.use('/campaign',campaignRouter);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
