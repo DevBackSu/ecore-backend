@@ -7,8 +7,7 @@ router.get('/', function(req, res){
     res.render('upload');
 })
 
-//사진 등록
 router.post('/', uploads.upload.single('userfile'),fileController.fileUpload);
 
-router.use(express.static('./upload'))
+router.use(express.static('./public/upload'))
 module.exports = router;

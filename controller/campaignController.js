@@ -9,7 +9,6 @@ async function Test(req, res, next){
         if (jwt_token == undefined) { 
             throw "로그인 정보가 없습니다." }
         const permission = await jwtmiddle.jwtCerti(jwt_token);
-        console.log(permission);
         res.json({
             "Message":"성공",
             "Data":"campaignTest"
