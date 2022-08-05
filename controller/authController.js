@@ -38,7 +38,7 @@ async function register(req, res, next) {
   const userData = {
     "CLIENT_ID": client_id,
     "NAME": name,
-  };
+  }; // user_id가 userData로 가야
   const jwtToken = await jwtmiddle.jwtCreateApp(userData);
 
   try {

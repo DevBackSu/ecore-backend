@@ -15,12 +15,12 @@ function login(client_id) {
 
           resolve(resData);
         } else {
-          const queryData = `SELECT jwt_token FROM user u WHERE client_id ="${client_id}"`;   
+          const queryData = `SELECT jwt_token, user_id FROM user u WHERE client_id ="${client_id}"`;   
           db.query(queryData, (err, db_data) =>{
             if (err) {
               reject("db err");
             } else {
-              const resData = { "success": true, "jwt_token": db_data[0].jwt_token, "is_new": false }; // 여기처럼 😀
+              const resData = { "success": true,"user_id": db_data[0].user_id, "jwt_token": db_data[0].jwt_token, "is_new": false };
               console.log(resData);
               resolve(resData); 
             }
