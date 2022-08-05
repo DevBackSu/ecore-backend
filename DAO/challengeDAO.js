@@ -5,9 +5,8 @@ const db = require("../db/db_info");
 function challenge() {
   return new Promise((resolve, reject) => {
     var USER_ID = 1;
-    var queryData =
-      "SELECT a.challenge_id, a.title, a.term, a.challenge_reward, a.participating_person, b.user_challenge_id, b.start_date FROM challenge a LEFT JOIN user_challenge b ON a.challenge_id = b.challenge_id AND b.is_challenging = 1 AND b.user_id = ?;";
-    db.query(queryData, USER_ID, (err, db_data) => {
+    var queryData = `SELECT a.challenge_id, a.title, a.term, a.challenge_reward, a.participating_person, b.user_challenge_id, b.start_date FROM challenge a LEFT JOIN user_challenge b ON a.challenge_id = b.challenge_id AND b.is_challenging = 1 AND b.user_id = ${USER_ID};`;
+    db.query(queryData, (err, db_data) => {
       console.log(err);
       if (err) {
         reject("db err");
@@ -32,6 +31,27 @@ function challenge() {
   });
 }
 
+function challengeDetail(parameters) {
+  return new Promise((resolve, reject) => {
+    var query1 = `SELECT c.detail FROM challenge c WHERE c.challenge_id = ${parameters};`;
+    var query2 = `SELECT ci.example_img FROM challenge_img ci WHERE challenge_id = ${parameters};`;
+    db.query(query1 + query2, (err, db_data) => {
+      console.log(err);
+      if (err) {
+        reject("db err");
+      } else {
+        var res_data = db_data[0];
+        res_data[0]["example"] = [];
+        db_data[1].forEach((element) => {
+          res_data[0]["example"].push(element["example_img"]);
+        });
+        resolve(res_data);
+      }
+    });
+  });
+}
+
 module.exports = {
   challenge,
+  challengeDetail,
 };

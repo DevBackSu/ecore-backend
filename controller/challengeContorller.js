@@ -18,6 +18,23 @@ async function challenge(req, res, next) {
   }
 }
 
+async function challengeDetail(req, res, next){
+  let parameters = req.query.challenge_id;
+  try{
+    const challengeDetail_date = await challengeDAO.challengeDetail(parameters);
+    res.json({
+      Message:"성공",
+      Data:challengeDetail_date
+    })
+  }catch{
+    res.json({
+      Message:"실패",
+      Error_Message:err
+    })
+  }
+}
+
 module.exports = {
   challenge,
+  challengeDetail
 };

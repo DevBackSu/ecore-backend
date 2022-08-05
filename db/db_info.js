@@ -9,7 +9,8 @@ const db = mysql.createPool({
   user: process.env.DB_user,
   password: process.env.DB_password,
   database: process.env.DB_database,
-  dateStrings: true
+  dateStrings: true,
+  multipleStatements : true
 })
 
 handleDisconnect(db)
