@@ -4,7 +4,7 @@ const db = require("../db/db_info");
 
 function challenge() {
   return new Promise((resolve, reject) => {
-    var USER_ID = 1;
+    var USER_ID = 2;
     var queryData = `SELECT a.challenge_id, a.title, a.term, a.challenge_reward, a.participating_person, b.user_challenge_id, b.start_date FROM challenge a LEFT JOIN user_challenge b ON a.challenge_id = b.challenge_id AND b.is_challenging = 1 AND b.user_id = ${USER_ID};`;
     db.query(queryData, (err, db_data) => {
       console.log(err);
