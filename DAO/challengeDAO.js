@@ -35,7 +35,8 @@ function challengeDetail(parameters) {
   return new Promise((resolve, reject) => {
     var query1 = `SELECT c.detail FROM challenge c WHERE c.challenge_id = ${parameters};`;
     var query2 = `SELECT ci.example_img FROM challenge_img ci WHERE challenge_id = ${parameters};`;
-    db.query(query1 + query2, (err, db_data) => {
+    var query = `SELECT u.name, u.profile_img, cr.review_content, cr.review_img FROM user u, challenge_review cr LEFT JOIN user_challenge uc ON cr.user_challenge_id = uc.user_challenge_id WHERE uc.challenge_id=${parameters} AND u.user_id =uc.user_id;`;
+    db.query(query1 + query2 + query, (err, db_data) => {
       console.log(err);
       if (err) {
         reject("db err");
@@ -45,6 +46,7 @@ function challengeDetail(parameters) {
         db_data[1].forEach((element) => {
           res_data[0]["example"].push(element["example_img"]);
         });
+        res_data[0]["reviews"] = db_data[2];
         resolve(res_data);
       }
     });
