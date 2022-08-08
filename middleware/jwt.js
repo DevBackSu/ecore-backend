@@ -23,6 +23,7 @@ function jwtCerti(token){
           reject("토큰이 만료되었습니다.") // 토큰이 만료되었습니다.
         }
         if(decoded){
+          console.log(decoded);
           resolve(decoded);
         }
         else{
@@ -31,25 +32,11 @@ function jwtCerti(token){
       });
   })
 }
-function jwtCreateApp(userData){
-  return new Promise(function (resolve, reject) {
-    jwt.sign({
-      USER_ID: userData.USER_ID,
-      NAME: userData.NAME,
-    }, process.env.JWT_SECRET, {
-      expiresIn: '301d',
-      issuer: 'ECORE',
-    },function(err,token){
-      if(err) reject(err)
-      else resolve(token)
-    });
-})
-}
+
 
 
 
 module.exports = {
   jwtCreate,
   jwtCerti,
-  jwtCreateApp
 };

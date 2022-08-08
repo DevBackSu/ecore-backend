@@ -31,9 +31,9 @@ function login(client_id) {
   });
 }
 
-function register(client_id, name,jwtToken) {
+function register(client_id, name) {
   return new Promise((resolve, reject) => {
-    const queryData = `INSERT INTO user(name, client_id, jwt_token) VALUE("${name}", "${client_id}", "${jwtToken}")`;
+    const queryData = `INSERT INTO user(name, client_id) VALUE("${name}", "${client_id}")`;
     db.query(queryData, (err, db_data) => {
       if (err) {
         console.log(err);
@@ -45,7 +45,24 @@ function register(client_id, name,jwtToken) {
     });
   });
 }
+
+function insert_jwt(user_id, jwt_token) {
+  return new Promise((resolve, reject) => {
+    const queryData = `UPDATE user set jwt_token = "${jwt_token}" where user_id = ${user_id}`;
+    db.query(queryData, (err, db_data) => {
+      if (err) {
+        console.log(err);
+        reject("db err");
+      } else {
+        console.log(db_data);
+        resolve(db_data);
+      }
+    });
+  });
+}
+
 module.exports = {
   login,
   register,
+  insert_jwt
 };
