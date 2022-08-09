@@ -90,9 +90,59 @@ async function challengeUploadDetail(req, res, next) {
   }
 }
 
+async function challengeMyDetail(req, res, next) {
+  const jwt_token = req.headers.jwt_token;
+  const user_challenge_id = req.query.user_challenge_id;
+  try {
+    if (jwt_token == undefined) throw "로그인 정보가 없습니다.";
+    const challengeMyDetail_data = await challengeDAO.challengeMyDetail(
+      user_challenge_id
+    );
+    res.json({
+      Message: "성공",
+      Data: challengeMyDetail_data,
+    });
+  } catch (err) {
+    res.json({
+      Message: "실패",
+      Error_Message: err,
+    });
+  }
+}
+
+async function challengeReview(req, res, next) {
+  const challenge_id = req.body.challenge_id;
+  const review_content = req.body.review_content;
+  const jwt_token = req.headers.jwt_token;
+  try {
+    if (jwt_token == undefined) throw "로그인 정보가 없습니다.";
+    const permission = await jwtmiddle.jwtCerti(jwt_token);
+    const challenge_data = await challengeDAO.challengeImage(
+      challenge_id,
+      permission.USER_ID
+    );
+    const review_data = await challengeDAO.challengeReview(
+      challenge_data.user_challenge_id,
+      review_content,
+      challenge_data.challenge_img
+    );
+    res.json({
+      Message: "성공",
+      Data: review_data,
+    });
+  } catch (err) {
+    res.json({
+      Message: "실패",
+      Error_Message: err,
+    });
+  }
+}
+
 module.exports = {
   challenge,
   challengeDetail,
   challengeStart,
   challengeUploadDetail,
+  challengeMyDetail,
+  challengeReview,
 };
