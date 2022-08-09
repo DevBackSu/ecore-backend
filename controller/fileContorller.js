@@ -15,9 +15,12 @@ async function fileUpload(req, res, next){
     const filename= req.file.originalname;
     const permission = await jwtmiddle.jwtCerti(jwt_token);
     parameters.user_id = permission.USER_ID;
+
+    const type = req.body.type;
+    const target = req.body.target;
     
     try{
-        const file_detail = await fileDAO.fileUploadDAO(parameter.user_id, filename);
+        const file_detail = await fileDAO.fileUploadDAO(type, target, parameter.user_id, filename);
         res.json({
             "Message" : "성공",
             "데이터" : file_detail
