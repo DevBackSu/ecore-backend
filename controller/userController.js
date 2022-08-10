@@ -3,6 +3,7 @@
 const express = require('express');
 const userDAO = require('../DAO/userDAO');
 const jwtmiddle = require('../middleware/jwt')
+const fs = require("fs");
 
 async function Test(req, res, next){
     try{
@@ -24,10 +25,14 @@ async function profileUpload(req, res, next){
 
     const filename= req.file.originalname;
     const permission = await jwtmiddle.jwtCerti(jwt_token);
-    parameters.user_id = permission.USER_ID;
-    
+    console.log(permission.USER_ID);
     try{
-        const file_detail = await fileDAO.profileUploadDAO(parameter.user_id, filename);
+        const profile_data = await userDAO.profileDeleteDAO(permission.USER_ID);
+
+        const file_data = profile_data[0].profile_img;
+        fs.unlink('upload/' + file_data, (err) => {if(err)   console.error(err);})
+
+        const file_detail = await userDAO.profileUploadDAO(permission.USER_ID, filename);
         res.json({
             "Message" : "성공",
             "데이터" : file_detail

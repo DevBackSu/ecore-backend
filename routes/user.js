@@ -6,6 +6,6 @@ const router = express.Router();
 const userController = require('../controller/userController');
 
 router.get('/', userController.Test);
-router.put('/profilepicture',uploads.upload.single('userfile'),userController.profileUpload);
+router.put('/profilepicture',uploads.upload.single('userfile'),userController.profileUpload); //프로필 사진 업로드
 
 module.exports=router;
