@@ -1,7 +1,6 @@
 "use strict";
 
 const express = require("express");
-const { RepositoryNotFoundError } = require("typeorm");
 const router = express.Router();
 const challengeController = require("../controller/challengeContorller");
 
