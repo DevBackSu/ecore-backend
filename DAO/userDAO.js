@@ -57,9 +57,22 @@ function userInfo(user_id) {
   });
 }
 
+function badge(user_id) {
+  return new Promise((resolve, reject) => {
+    const query = `SELECT b.title, b.badge_img, b.detail, ub.badge_date FROM badge b LEFT JOIN user_badge ub ON (b.badge_id = ub.badge_id AND ub.user_id = ${user_id})`;
+    db.query(query, (err, db_data) => {
+      if (err) reject("db_err");
+      console.log(db_data);
+      console.log(user_id);
+      resolve(db_data);
+    });
+  });
+}
+
 module.exports = {
   profileUploadDAO,
   profileDeleteDAO,
   existCheck,
   userInfo,
+  badge,
 };

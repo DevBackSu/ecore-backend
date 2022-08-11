@@ -12,5 +12,6 @@ router.put(
 ); //프로필 사진 업로드
 router.get("/name/exist", userController.existCheck);
 router.get("/info", userController.userInfo);
+router.get("/badge", userController.badge);
 
 module.exports = router;

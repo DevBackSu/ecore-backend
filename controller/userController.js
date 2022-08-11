@@ -79,8 +79,27 @@ async function userInfo(req, res, next) {
   }
 }
 
+async function badge(req, res, next){
+  var jwt_token = req.headers.jwt_token;
+  try{
+    if(jwt_token == undefined) throw "로그인 정보가 없습니다.";
+    const permission = await jwtmiddle.jwtCerti(jwt_token);
+    const badge_data = await userDAO.badge(permission.USER_ID);
+    res.json({
+      Message:"성공",
+      Data:badge_data
+    })
+  }catch(err){
+    res.json({
+      Mesasge:"실패",
+      Error_message:err
+    })
+  }
+}
+
 module.exports = {
   profileUpload,
   existCheck,
   userInfo,
+  badge,
 };
