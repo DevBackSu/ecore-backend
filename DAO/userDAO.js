@@ -31,7 +31,7 @@ function profileDeleteDAO(parameter) {
 
 function existCheck(name) {
   return new Promise((resolve, reject) => {
-    const query = `SELECT u.name FROM user u WHERE u.name = "${name}" `;
+    const query = `SELECT COUNT(u.user_id) AS cnt FROM user u WHERE u.name = "${name}" `;
     db.query(query, (err, db_data) => {
       if (err) {
         reject("db_err");

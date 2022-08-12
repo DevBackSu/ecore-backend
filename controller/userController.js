@@ -40,13 +40,12 @@ async function profileUpload(req, res, next) {
 async function existCheck(req, res, next) {
   var jwt_token = req.headers.jwt_token;
   var name = req.query.name;
-
   try {
     if (jwt_token == undefined) throw "로그인 정보가 없습니다.";
     const check_data = await userDAO.existCheck(name);
     console.log(check_data);
     var message;
-    if (check_data[0] == null) message = "possible";
+    if (check_data[0]["cnt"] == 0) message = "possible";
     else message = "exist";
     res.json({
       Message: "성공",
