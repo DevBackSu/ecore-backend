@@ -27,6 +27,7 @@ async function login(req, res, next) {
   } catch (err) {
     res.json({
       "Message": "실패",
+      Error_Message:err
     });
   }
 }

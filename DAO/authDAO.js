@@ -4,6 +4,7 @@ const db = require("../db/db_info");
 
 function login(client_id) {
   return new Promise((resolve, reject) => {
+    if(client_id == undefined) throw "client_id err";
     const queryData = `SELECT count(*) as cnt FROM user u WHERE client_id ="${client_id}"`;
     db.query(queryData, (err, db_data) => {
       if (err) {
