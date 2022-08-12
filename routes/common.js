@@ -12,4 +12,6 @@ const commonController = require('../controller/commonController');
 
 router.post('/like', commonController.like);
 
+router.delete('/like', commonController.likeDelete);
+
 module.exports=router;
