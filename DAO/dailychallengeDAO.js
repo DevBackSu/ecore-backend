@@ -5,10 +5,9 @@ const db = require("../db/db_info");
 function dailychallengeDAO(day, USER_ID){
   return new Promise(function(resolve, reject){
     const sql = `select dc.title, dc.daily_reward, di.daily_img, di.daily_good, udc.daily_date from daily_challenge dc
-    left join user_daily_challenge udc on udc.daily_challenge_id = dc.daily_challenge_id
+    left join user_daily_challenge udc on udc.daily_challenge_id = dc.daily_challenge_id and udc.user_id = ${USER_ID}
     left join daily_image di on di.user_daily_challenge_id = udc.user_daily_challenge_id
-    left join user u on u.user_id = udc.user_id
-    where dc.daily_challenge_id = ${day} and u.user_id = ${USER_ID};`;
+    where dc.daily_challenge_id = ${day};`;
     db.query(sql, function(error, db_data){
       if(error){
         reject("DB ERR");
