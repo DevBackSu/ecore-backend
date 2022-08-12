@@ -13,5 +13,7 @@ router.put(
 router.get("/name/exist", userController.existCheck);
 router.get("/info", userController.userInfo);
 router.get("/badge", userController.badge);
+router.put("/nickname", userController.changeName);
+router.get("/follow", userController.follow);
 
 module.exports = router;

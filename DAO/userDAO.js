@@ -62,8 +62,34 @@ function badge(user_id) {
     const query = `SELECT b.title, b.badge_img, b.detail, ub.badge_date FROM badge b LEFT JOIN user_badge ub ON (b.badge_id = ub.badge_id AND ub.user_id = ${user_id})`;
     db.query(query, (err, db_data) => {
       if (err) reject("db_err");
+      resolve(db_data);
+    });
+  });
+}
+
+function changeName(user_id, name, jwt_token) {
+  return new Promise((resolve, reject) => {
+    const query = `UPDATE user set jwt_token = "${jwt_token}", name = "${name}" where user_id = ${user_id};`;
+    db.query(query, (err, db_data) => {
+      if (err) reject("db_err");
       console.log(db_data);
-      console.log(user_id);
+      resolve(db_data);
+    });
+  });
+}
+
+function follow(type, user_id) {
+  return new Promise((resolve, reject) => {
+    var query;
+    if (type == "following") {
+      query = `SELECT u.profile_img, u.name FROM user u WHERE u.user_id IN (SELECT f.user_id2 from follow f WHERE f.user_id = ${user_id});`;
+    } else if (type == "follower") {
+      query = `SELECT u.profile_img, u.name FROM user u WHERE u.user_id IN (SELECT f.user_id from follow f WHERE f.user_id2 = ${user_id});`;
+    } else throw "타입을 확인해주세요";
+    console.log(query);
+    db.query(query, (err, db_data) => {
+      if (err) reject("db_err");
+      console.log(db_data);
       resolve(db_data);
     });
   });
@@ -75,4 +101,6 @@ module.exports = {
   existCheck,
   userInfo,
   badge,
+  changeName,
+  follow,
 };

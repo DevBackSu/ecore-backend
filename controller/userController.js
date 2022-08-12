@@ -78,21 +78,68 @@ async function userInfo(req, res, next) {
   }
 }
 
-async function badge(req, res, next){
+async function badge(req, res, next) {
   var jwt_token = req.headers.jwt_token;
-  try{
-    if(jwt_token == undefined) throw "로그인 정보가 없습니다.";
+  try {
+    if (jwt_token == undefined) throw "로그인 정보가 없습니다.";
     const permission = await jwtmiddle.jwtCerti(jwt_token);
     const badge_data = await userDAO.badge(permission.USER_ID);
     res.json({
-      Message:"성공",
-      Data:badge_data
-    })
-  }catch(err){
+      Message: "성공",
+      Data: badge_data,
+    });
+  } catch (err) {
     res.json({
-      Mesasge:"실패",
-      Error_message:err
-    })
+      Mesasge: "실패",
+      Error_message: err,
+    });
+  }
+}
+
+async function changeName(req, res, next) {
+  const jwt_token = req.headers.jwt_token;
+  var name = req.body.name;
+  try {
+    if (jwt_token == undefined) throw "로그인 정보가 없습니다.";
+    const permission = await jwtmiddle.jwtCerti(jwt_token);
+    const userData = {
+      USER_ID: permission.USER_ID,
+      NAME: name,
+    };
+    const new_jwt_token = await jwtmiddle.jwtCreate(userData);
+    const name_data = await userDAO.changeName(
+      permission.USER_ID,
+      name,
+      new_jwt_token
+    );
+    res.json({
+      Message: "성공",
+      Data: new_jwt_token,
+    });
+  } catch (err) {
+    res.json({
+      Message: "실패",
+      Error_message: err,
+    });
+  }
+}
+
+async function follow(req, res, next) {
+  const jwt_token = req.headers.jwt_token;
+  const type = req.query.type;
+  try {
+    if (jwt_token == undefined) throw "로그인 정보가 없습니다.";
+    const permission = await jwtmiddle.jwtCerti(jwt_token);
+    const follow_data = await userDAO.follow(type, permission.USER_ID);
+    res.json({
+      Message: "성공",
+      Data: follow_data,
+    });
+  } catch (err) {
+    res.json({
+      Message: "실패",
+      Error_message: err,
+    });
   }
 }
 
@@ -101,4 +148,6 @@ module.exports = {
   existCheck,
   userInfo,
   badge,
+  changeName,
+  follow,
 };
