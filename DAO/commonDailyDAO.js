@@ -46,7 +46,18 @@ function dailyDeleteDAO(user_id, daily){
     const sql = `DELETE FROM daily_like WHERE user_id=${user_id} AND user_daily_challenge_id = ${daily}`;
     db.query(sql, function(error, db_data){
       if(error){
-        console.log(error)
+        reject("DB ERR");
+      }
+      resolve(db_data);
+    })
+  })
+}
+
+function reportDailyDAO(img_id){
+  return new Promise(function(resolve, reject){
+    const sql = `update daily_image set daily_bad = daily_bad + 1 where daily_image_id = ${img_id};`;
+    db.query(sql, function(error, db_data){
+      if(error){
         reject("DB ERR");
       }
       resolve(db_data);
@@ -55,11 +66,10 @@ function dailyDeleteDAO(user_id, daily){
 }
 
 
-
-
 module.exports = {
   daily_idDAO,
   likeUpdateDAO,
   dailylikeDAO,
-  dailyDeleteDAO
+  dailyDeleteDAO,
+  reportDailyDAO
 };

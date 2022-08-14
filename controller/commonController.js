@@ -3,6 +3,7 @@
 const jwtmiddle = require("../middleware/jwt");
 const commonDailyDAO = require("../DAO/commonDailyDAO");
 const commonChallengeDAO = require("../DAO/commonChallengeDAO");
+const { resolveInclude } = require("ejs");
 
 async function like(req, res, next) {
   var jwt_token = req.headers.jwt_token;
@@ -19,11 +20,8 @@ async function like(req, res, next) {
       await commonDailyDAO.dailylikeDAO(daily, permission.USER_ID);
       like_data = await commonDailyDAO.likeUpdateDAO(img_id);
     } else if (type == "challenge") {
-        console.log("dkfjdkfjdkf");
       await commonChallengeDAO.challengeInsertDAO(img_id,permission.USER_ID);
-      console.log("ElfhdELfhdELfhddkdkkkdkdkdkdkdkddkdkdkdkks");
       like_data = await commonChallengeDAO.likeUpdateDAO(img_id);
-      console.log("여기냐?");
     } else {
       throw "존재하지 않는 타입입니다.";
     }
@@ -61,18 +59,43 @@ async function likeDelete(req, res, next) {
       throw "존재하지 않는 타입입니다.";
     }
     res.json({
-      Message: "성공",
+      Message: "성공"
     });
   } catch (err) {
     console.log(err);
     res.json({
       Message: "실패",
-      Err: err,
+      ERR : err
     });
+  }
+}
+
+async function report(req, res, next){
+  var jwt_token = req.headers.jwt_token;
+  const {type, img_id} = req.body;
+  let report_data;
+  try{
+    if(jwt_token == undefined){ throw "로그인 정보가 없습니다." }
+    if(type == "daily"){
+      report_data = await commonDailyDAO.reportDailyDAO(img_id);
+    }
+    else if(type == "challenge"){
+      report_data = await commonChallengeDAO.reportChallengeDAO(img_id);
+    }
+    res.json({
+      Message : "성공"
+    })
+  }
+  catch(err){
+    res.json({
+      "Message" : "실패",
+      ERR : err
+    })
   }
 }
 
 module.exports = {
   like,
   likeDelete,
+  report
 };
