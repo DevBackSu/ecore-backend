@@ -29,28 +29,28 @@ function likeUpdateDAO(img_id) {
   });
 }
 
-function challengeDeleteDAO(user_id, img_id){
-    return new Promise(function(resolve, reject){
-        const sql = `DELETE from challenge_like WHERE user_id = ${user_id} and challenge_image_id = ${img_id};`;
-        db.query(sql, function(error, db_data){
-            if(error){
-                reject("DB ERR");
-            }
-            resolve(db_data);
-        })
-    })
-}
-
-function reportChallengeDAO(img_id){
-  return new Promise(function(resolve, reject){
-    const sql = `update challenge_image set challenge_bad = challenge_bad + 1 where challenge_image_id = ${img_id};`;
-    db.query(sql, function(error, db_data){
-      if(error){
+function challengeDeleteDAO(user_id, img_id) {
+  return new Promise(function (resolve, reject) {
+    const sql = `DELETE from challenge_like WHERE user_id = ${user_id} and challenge_image_id = ${img_id};`;
+    db.query(sql, function (error, db_data) {
+      if (error) {
         reject("DB ERR");
       }
       resolve(db_data);
-    })
-  })
+    });
+  });
+}
+
+function reportChallengeDAO(img_id) {
+  return new Promise(function (resolve, reject) {
+    const sql = `update challenge_image set challenge_bad = challenge_bad + 1 where challenge_image_id = ${img_id};`;
+    db.query(sql, function (error, db_data) {
+      if (error) {
+        reject("DB ERR");
+      }
+      resolve(db_data);
+    });
+  });
 }
 
 module.exports = {
