@@ -143,6 +143,77 @@ async function follow(req, res, next) {
   }
 }
 
+async function followPost(req, res, next) {
+  const jwt_token = req.headers.jwt_token;
+  const target_id = req.body.target_id;
+
+  try {
+    if (jwt_token == undefined) throw "로그인 정보가 없습니다.";
+    const permission = await jwtmiddle.jwtCerti(jwt_token);
+    const followcheck = await userDAO.followingcheck(
+      permission.USER_ID,
+      target_id
+    );
+    if (followcheck == 1) throw "이미 팔로잉 중입니다.";
+    const follow_data = await userDAO.followPost(permission.USER_ID, target_id);
+    res.json({
+      Message: "성공",
+      Data: follow_data,
+    });
+  } catch (err) {
+    res.json({
+      Message: "실패",
+      Error_message: err,
+    });
+  }
+}
+
+async function followDelete(req, res, next) {
+  const jwt_token = req.headers.jwt_token;
+  const target_id = req.body.target_id;
+  try {
+    if (jwt_token == undefined) throw "로그인 정보가 없습니다.";
+    const permission = await jwtmiddle.jwtCerti(jwt_token);
+    const followcheck = await userDAO.followingcheck(
+      permission.USER_ID,
+      target_id
+    );
+    if (followcheck == 0) throw "팔로우하고 있지 않은 대상입니다.";
+    const follow_data = await userDAO.followDelete(
+      permission.USER_ID,
+      target_id
+    );
+    res.json({
+      Message: "성공",
+      Data: follow_data,
+    });
+  } catch (err) {
+    res.json({
+      Message: "실패",
+      Error_message: err,
+    });
+  }
+}
+
+async function followSearch(req, res, next) {
+  const jwt_token = req.headers.jwt_token;
+  const name = req.query.name;
+  try {
+    if (jwt_token == undefined) throw "로그인 정보가 없습니다.";
+    const search_data = await userDAO.followSearch(name);
+    if (search_data[0] == undefined) throw "유저를 찾을 수 없습니다.";
+    res.json({
+      Message: "성공",
+      Data: search_data,
+    });
+  } catch (err) {
+    res.json({
+      Message: "실패",
+      Error_message: err,
+    });
+  }
+}
+
 module.exports = {
   profileUpload,
   existCheck,
@@ -150,4 +221,7 @@ module.exports = {
   badge,
   changeName,
   follow,
+  followPost,
+  followDelete,
+  followSearch,
 };

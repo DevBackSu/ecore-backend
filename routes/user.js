@@ -15,5 +15,8 @@ router.get("/info", userController.userInfo);
 router.get("/badge", userController.badge);
 router.put("/nickname", userController.changeName);
 router.get("/follow", userController.follow);
+router.post("/follow", userController.followPost);
+router.delete("/follow", userController.followDelete);
+router.get("/follow/search", userController.followSearch);
 
 module.exports = router;

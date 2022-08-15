@@ -95,6 +95,48 @@ function follow(type, user_id) {
   });
 }
 
+function followingcheck(user_id, target_id) {
+  return new Promise((resolve, reject) => {
+    const query = `SELECT COUNT(f.follow_id) AS cnt FROM follow f WHERE f.user_id = ${user_id} AND f.user_id2 = ${target_id};`;
+    db.query(query, (err, db_data) => {
+      if (err) reject("db_err");
+      console.log(db_data);
+      console.log(db_data[0].cnt);
+      resolve(db_data[0].cnt);
+    });
+  });
+}
+
+function followPost(user_id, target_id) {
+  return new Promise((resolve, reject) => {
+    const query = `INSERT INTO follow(user_id, user_id2) VALUE(${user_id}, ${target_id});`;
+    db.query(query, (err, db_data) => {
+      if (err) reject("db_err");
+      resolve(db_data);
+    });
+  });
+}
+
+function followDelete(user_id, target_id) {
+  return new Promise((resolve, reject) => {
+    const query = `DELETE FROM follow WHERE user_id = ${user_id} AND user_id2 = ${target_id};`;
+    db.query(query, (err, db_data) => {
+      if (err) reject("db_err");
+      resolve(db_data);
+    });
+  });
+}
+
+function followSearch(name) {
+  return new Promise((resolve, reject) => {
+    const query = `SELECT u.user_id, u.total_score, u.profile_img FROM user u WHERE u.name = "${name}";`;
+    db.query(query, (err, db_data) => {
+      if (err) reject("db_data");
+      resolve(db_data);
+    });
+  });
+}
+
 module.exports = {
   profileUploadDAO,
   profileDeleteDAO,
@@ -103,4 +145,8 @@ module.exports = {
   badge,
   changeName,
   follow,
+  followPost,
+  followDelete,
+  followingcheck,
+  followSearch,
 };
