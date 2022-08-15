@@ -53,9 +53,25 @@ function reportChallengeDAO(img_id) {
   });
 }
 
+function zoominChallengeDAO(img_id){
+  return new Promise(function(resolve, reject){
+    const sql = `select u.user_id, u.name, ci.challenge_img from challenge_image ci
+    left join user_challenge uc on uc.user_challenge_id = ci.user_challenge_id
+    left join user u on u.user_id = uc.user_id 
+    where ci.challenge_image_id = ${img_id};`;
+    db.query(sql, function(error,db_data){
+      if(error){
+        reject("DB ERR");
+      }
+      resolve(db_data);
+    });
+  })
+}
+
 module.exports = {
   challengeInsertDAO,
   likeUpdateDAO,
   challengeDeleteDAO,
   reportChallengeDAO,
+  zoominChallengeDAO
 };

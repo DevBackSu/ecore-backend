@@ -82,6 +82,8 @@ async function report(req, res, next) {
       report_data = await commonDailyDAO.reportDailyDAO(img_id);
     } else if (type == "challenge") {
       report_data = await commonChallengeDAO.reportChallengeDAO(img_id);
+    } else {
+      throw "존재하지 않는 타입입니다.";
     }
     res.json({
       Message: "성공",
@@ -97,6 +99,28 @@ async function report(req, res, next) {
 async function zoomin(req, res, next) {
   var jwt_token = req.headers.jwt_token;
   const { type, img_id } = req.query;
+  let zoomin_data;
+  try{
+    if(jwt_token == undefined)  throw "로그인 정보가 없습니다."
+    if(type == "daily"){
+      zoomin_data = await commonDailyDAO.zoominDailyDAO(img_id);
+    }
+    else if(type == "challenge"){
+      zoomin_data = await commonChallengeDAO.zoominChallengeDAO(img_id);
+    }
+    else{
+      throw "존재하지 않는 타입입니다."
+    }
+    res.json({
+      "Message" : "성공",
+      Data : zoomin_data
+    })
+  }catch(err){
+    res.json({
+      "Message" : "실패",
+      ERR : err
+    })
+  }
 }
 
 async function image(req, res, next) {
@@ -113,7 +137,9 @@ async function image(req, res, next) {
       image_data = await commonChallengeDAO.imageChallengeDAO(count, target);
     else if (type == "campaign")
       image_data = await commonCampaignDAO.imageCapaignDAO(count, target);
-    else throw "타입없음.";
+    else{
+      throw "존재하지 않는 타입입니다.";
+    }
     res.json({
       Message: "성공",
       Data: image_data,

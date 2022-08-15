@@ -68,10 +68,26 @@ function reportDailyDAO(img_id) {
   });
 }
 
+function zoominDailyDAO(img_id){
+  return new Promise(function(resolve, reject){
+    const sql = `select u.user_id, u.name, di.daily_img from daily_image di
+    left join user_daily_challenge udc on udc.user_daily_challenge_id = di.user_daily_challenge_id
+    left join user u on u.user_id = udc.user_id
+    where di.daily_image_id = ${img_id};`;
+    db.query(sql, function(error,db_data){
+      if(error){
+        reject("DB ERR");
+      }
+      resolve(db_data);
+    });
+  })
+}
+
 module.exports = {
   daily_idDAO,
   likeUpdateDAO,
   dailylikeDAO,
   dailyDeleteDAO,
   reportDailyDAO,
+  zoominDailyDAO
 };
