@@ -133,8 +133,10 @@ async function image(req, res, next) {
     }
     let image_data;
     if (type == "daily") image_data = await commonDailyDAO.imageDailyDAO(count, target);
-    else if (type == "challenge")
-      image_data = await commonChallengeDAO.imageChallengeDAO(count, target);
+    else if (type == "challenge"){
+      const permission = jwtmiddle.jwtCerti(jwt_token)
+      image_data = await commonChallengeDAO.imageChallengeDAO(count, target, permission.USER_ID);
+    }
     else if (type == "campaign")
       image_data = await commonCampaignDAO.imageCapaignDAO(count, target);
     else{

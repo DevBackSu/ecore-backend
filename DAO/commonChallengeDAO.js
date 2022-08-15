@@ -68,10 +68,20 @@ function zoominChallengeDAO(img_id){
   })
 }
 
+function imageChallengeDAO(count, target, user_id){
+
+}
+
+function uploadChallengeDAO(target, img){
+  
+}
+
 module.exports = {
   challengeInsertDAO,
   likeUpdateDAO,
   challengeDeleteDAO,
   reportChallengeDAO,
-  zoominChallengeDAO
+  zoominChallengeDAO,
+  imageChallengeDAO,
+  uploadChallengeDAO
 };
