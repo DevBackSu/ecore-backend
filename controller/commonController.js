@@ -138,7 +138,7 @@ async function image(req, res, next) {
       image_data = await commonChallengeDAO.imageChallengeDAO(count, target, permission.USER_ID, id);
     }
     else if (type == "campaign")
-      image_data = await commonCampaignDAO.imageCapaignDAO(target);
+      image_data = await commonCampaignDAO.imageCampaignDAO(target);
     else{
       throw "존재하지 않는 타입입니다.";
     }
@@ -161,12 +161,13 @@ async function upload(req, res, next) {
     if (jwt_token == undefined) {
       throw "로그인 정보가 없습니다.";
     }
+    const permission = await jwtmiddle.jwtCerti(jwt_token);
     let upload_data;
     if (type == "daily") upload_data = await commonDailyDAO.uploadDailyDAO(target, img);
     else if (type == "challenge")
       upload_data = await commonChallengeDAO.uploadChallengeDAO(target, img);
     else if (type == "campaign")
-      upload_data = await commonCampaignDAO.uploadCapaignDAO(target, img);
+      upload_data = await commonCampaignDAO.uploadCampaignDAO(target, permission.USER_ID);
     else throw "타입없음.";
     res.json({
       Message: "성공",
