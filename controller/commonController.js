@@ -125,20 +125,20 @@ async function zoomin(req, res, next) {
 
 async function image(req, res, next) {
   var jwt_token = req.headers.jwt_token;
-  const { type, count, target } = req.query;
+  const { type, count, target, id} = req.query;
 
   try {
     if (jwt_token == undefined) {
       throw "로그인 정보가 없습니다.";
     }
     let image_data;
-    if (type == "daily") image_data = await commonDailyDAO.imageDailyDAO(count, target);
+    if (type == "daily") image_data = await commonDailyDAO.imageDailyDAO(count, target, id);
     else if (type == "challenge"){
       const permission = jwtmiddle.jwtCerti(jwt_token)
-      image_data = await commonChallengeDAO.imageChallengeDAO(count, target, permission.USER_ID);
+      image_data = await commonChallengeDAO.imageChallengeDAO(count, target, permission.USER_ID, id);
     }
     else if (type == "campaign")
-      image_data = await commonCampaignDAO.imageCapaignDAO(count, target);
+      image_data = await commonCampaignDAO.imageCapaignDAO(target);
     else{
       throw "존재하지 않는 타입입니다.";
     }
