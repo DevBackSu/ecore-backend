@@ -29,6 +29,7 @@ async function like(req, res, next) {
       Message: "성공",
     });
   } catch (err) {
+    console.log(err);
     res.json({
       Message: "실패",
       Err: err,
@@ -61,6 +62,7 @@ async function likeDelete(req, res, next) {
       Message: "성공",
     });
   } catch (err) {
+    console.log(err);
     res.json({
       Message: "실패",
       ERR: err,
@@ -133,7 +135,7 @@ async function image(req, res, next) {
       image_data = await commonDailyDAO.imageDailyDAO(
         count,
         target,
-        permission.USER_ID,
+        permission.USER_ID
       );
     else if (type == "challenge") {
       image_data = await commonChallengeDAO.imageChallengeDAO(
@@ -168,22 +170,35 @@ async function upload(req, res, next) {
     }
     const permission = await jwtmiddle.jwtCerti(jwt_token);
     let upload_data;
-    if (type == "daily")
-      upload_data = await commonDailyDAO.uploadDailyDAO(target, img);
-    else if (type == "challenge") {
+    if (type == "daily") {
+      const tmp = await commonDailyDAO.insertUDC(permission.USER_ID);
+      console.log(tmp.insertId);
+      upload_data = await commonDailyDAO.uploadDailyDAO(tmp.insertId, img);
+    } else if (type == "challenge") {
       const tmp = await commonChallengeDAO.checkUCI(target, permission.USER_ID);
       if (tmp[0] == undefined) throw "사용자의 user_challenge_id가 아닙니다.";
       else if (tmp[0].is_challenging == 0) throw "종료된 도전입니다.";
       upload_data = await commonChallengeDAO.uploadChallengeDAO(target, img);
     } else if (type == "campaign") {
-      var uci = await commonCampaignDAO.selectUserCampaignIdDAO(target, permission.USER_ID);
-      if(uci == undefined){
-        await commonCampaignDAO.uploadCampaignDAO(target,permission.USER_ID);
-        uci = await commonCampaignDAO.selectUserCampaignIdDAO(target, permission.USER_ID);
-        upload_data = commonCampaignDAO.insertCampaignImageDAO(uci[0].user_campaign_id, img);
-      }
-      else{
-        upload_data = commonCampaignDAO.insertCampaignImageDAO(uci[0].user_campaign_id, img);
+      var uci = await commonCampaignDAO.selectUserCampaignIdDAO(
+        target,
+        permission.USER_ID
+      );
+      if (uci == undefined) {
+        await commonCampaignDAO.uploadCampaignDAO(target, permission.USER_ID);
+        uci = await commonCampaignDAO.selectUserCampaignIdDAO(
+          target,
+          permission.USER_ID
+        );
+        upload_data = commonCampaignDAO.insertCampaignImageDAO(
+          uci[0].user_campaign_id,
+          img
+        );
+      } else {
+        upload_data = commonCampaignDAO.insertCampaignImageDAO(
+          uci[0].user_campaign_id,
+          img
+        );
       }
     } else throw "존재하지 않는 타입입니다.";
     res.json({
