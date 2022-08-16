@@ -19,14 +19,26 @@ function imageCampaignDAO(target){
 
 function uploadCampaignDAO(target, user_id){
     return new Promise(function(resolve, reject){
-        console.log(user_id);
-        console.log(target);
         const sql = `insert into user_campaign(user_id, campaign_id)
         values(${user_id}, ${target});`;
-        const sql2 = `select user_campaign_id from user_campaign uc
-        where user_id = ${user_id} and campaign_id = ${target};`;
-        db.query(sql + sql2, function(error, db_data){
+        db.query(sql, function(error, db_data){
             if(error){
+                console.log(error)
+                reject("DB ERR");
+            }
+            console.log(db_data);
+            resolve(db_data);
+        })
+    })
+}
+
+function selectUserCampaignIdDAO(target, user_id){
+    return new Promise(function(resolve, reject){
+        const sql = `select user_campaign_id from user_campaign uc
+        where user_id = ${user_id} and campaign_id = ${target};`;
+        db.query(sql, function(error,db_data){
+            if(error){
+                console.log(error)
                 reject("DB ERR");
             }
             console.log(db_data);
@@ -44,6 +56,7 @@ function insertCampaignImageDAO(user_campaign_id, img){
                 console.log(error)
                 reject("DB ERR");
             }
+            console.log(db_data);
             resolve(db_data);
         })
     })
@@ -52,5 +65,6 @@ function insertCampaignImageDAO(user_campaign_id, img){
 module.exports = {
     imageCampaignDAO,
     uploadCampaignDAO,
-    insertCampaignImageDAO
+    insertCampaignImageDAO,
+    selectUserCampaignIdDAO
 };
