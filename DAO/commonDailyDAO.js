@@ -68,20 +68,40 @@ function reportDailyDAO(img_id) {
   });
 }
 
-function zoominDailyDAO(img_id){
-  return new Promise(function(resolve, reject){
+function zoominDailyDAO(img_id) {
+  return new Promise(function (resolve, reject) {
     const sql = `select u.user_id, u.name, di.daily_img as is_good from daily_image di
     left join user_daily_challenge udc on udc.user_daily_challenge_id = di.user_daily_challenge_id
     left join user u on u.user_id = udc.user_id
     where di.daily_image_id = ${img_id};`;
-    db.query(sql, function(error,db_data){
-      if(error){
+    db.query(sql, function (error, db_data) {
+      if (error) {
         reject("DB ERR");
       }
       resolve(db_data);
     });
-  })
+  });
 }
+
+function imageDailyDAO(count, target, user_id) {
+  return new Promise((resolve, reject) => {
+    let query;
+    const d = new Date();
+    if (count == "one") {
+      if (target != null) throw "target is not null";
+      query = `SELECT di.daily_image_id AS img_id, dc.title AS title, di.daily_img AS img, udc.daily_date AS date, di.daily_good AS good FROM daily_image di LEFT JOIN user_daily_challenge udc ON di.user_daily_challenge_id = udc.user_daily_challenge_id LEFT JOIN daily_challenge dc ON udc.daily_challenge_id = dc.daily_challenge_id WHERE udc.daily_challenge_id = ${d.getDay()} AND NOT udc.user_id = ${user_id} ORDER BY RAND() LIMIT 1;`;
+    } else if (count == "all") {
+      if (target == null) throw "target is null";
+      query = `SELECT di.daily_image_id AS img_id, dc.title AS title, di.daily_img AS img, udc.daily_date AS date, di.daily_good AS good FROM daily_image di LEFT JOIN user_daily_challenge udc ON di.user_daily_challenge_id = udc.user_daily_challenge_id LEFT JOIN daily_challenge dc ON udc.daily_challenge_id = dc.daily_challenge_id WHERE udc.user_id = ${target} ;`;
+    } else throw "count 값을 확인해주세요.";
+    db.query(query, (err, db_data) => {
+      if (err) reject("db_err");
+      resolve(db_data);
+    });
+  });
+}
+
+function uploadDailyDAO(target, img) {}
 
 module.exports = {
   daily_idDAO,
@@ -89,5 +109,7 @@ module.exports = {
   dailylikeDAO,
   dailyDeleteDAO,
   reportDailyDAO,
-  zoominDailyDAO
+  zoominDailyDAO,
+  imageDailyDAO,
+  uploadDailyDAO,
 };

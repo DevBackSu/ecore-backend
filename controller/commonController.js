@@ -130,7 +130,11 @@ async function image(req, res, next) {
     const permission = await jwtmiddle.jwtCerti(jwt_token);
     let image_data;
     if (type == "daily")
-      image_data = await commonDailyDAO.imageDailyDAO(count, target, id);
+      image_data = await commonDailyDAO.imageDailyDAO(
+        count,
+        target,
+        permission.USER_ID,
+      );
     else if (type == "challenge") {
       image_data = await commonChallengeDAO.imageChallengeDAO(
         count,
