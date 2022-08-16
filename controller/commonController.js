@@ -29,7 +29,6 @@ async function like(req, res, next) {
       Message: "성공",
     });
   } catch (err) {
-    console.log(err);
     res.json({
       Message: "실패",
       Err: err,
@@ -62,7 +61,6 @@ async function likeDelete(req, res, next) {
       Message: "성공",
     });
   } catch (err) {
-    console.log(err);
     res.json({
       Message: "실패",
       ERR: err,
@@ -174,24 +172,12 @@ async function upload(req, res, next) {
       else if (tmp[0].is_challenging == 0) throw "종료된 도전입니다.";
       upload_data = await commonChallengeDAO.uploadChallengeDAO(target, img);
     } else if (type == "campaign") {
-      // var uci = await commonCampaignDAO.uploadCampaignDAO(
-      //   target,
-      //   permission.USER_ID
-      // );
-      // console.log(uci[1][0].user_campaign_id);
-      // upload_data = await commonCampaignDAO.insertCampaignImageDAO(
-      //   uci[1][0].user_campaign_id,
-      //   img
-      // );
-      //1. select 한 거 uci에 저장
       var uci = await commonCampaignDAO.selectUserCampaignIdDAO(target, permission.USER_ID);
-      //2. select가 없으면 2번 insert
       if(uci == undefined){
         await commonCampaignDAO.uploadCampaignDAO(target,permission.USER_ID);
         uci = await commonCampaignDAO.selectUserCampaignIdDAO(target, permission.USER_ID);
         upload_data = commonCampaignDAO.insertCampaignImageDAO(uci[0].user_campaign_id, img);
       }
-      //3. select가 있으면 1번 insert
       else{
         upload_data = commonCampaignDAO.insertCampaignImageDAO(uci[0].user_campaign_id, img);
       }

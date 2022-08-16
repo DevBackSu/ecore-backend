@@ -23,10 +23,8 @@ function uploadCampaignDAO(target, user_id){
         values(${user_id}, ${target});`;
         db.query(sql, function(error, db_data){
             if(error){
-                console.log(error)
                 reject("DB ERR");
             }
-            console.log(db_data);
             resolve(db_data);
         })
     })
@@ -38,10 +36,8 @@ function selectUserCampaignIdDAO(target, user_id){
         where user_id = ${user_id} and campaign_id = ${target};`;
         db.query(sql, function(error,db_data){
             if(error){
-                console.log(error)
                 reject("DB ERR");
             }
-            console.log(db_data);
             resolve(db_data);
         })
     })
@@ -53,10 +49,8 @@ function insertCampaignImageDAO(user_campaign_id, img){
         values(${user_campaign_id}, "${img}");`;
         db.query(sql, function(error, db_data){
             if(error){
-                console.log(error)
                 reject("DB ERR");
             }
-            console.log(db_data);
             resolve(db_data);
         })
     })
