@@ -89,7 +89,25 @@ function imageChallengeDAO(count, target, user_id, challenge_id) {
   });
 }
 
-function uploadChallengeDAO(target, img) {}
+function uploadChallengeDAO(target, img) {
+  return new Promise((resolve, reject) => {
+    const query = `INSERT INTO challenge_image(user_challenge_id, challenge_img) VALUE(${target},"${img}");`;
+    db.query(query,(err,db_data)=>{
+      if(err) reject("db_err");
+      resolve(db_data);
+    })
+  })
+}
+
+function checkUCI(target, user_id){
+  return new Promise((resolve, reject) => {
+    const query = `SELECT is_challenging FROM user_challenge WHERE user_id = ${user_id} AND user_challenge_id = ${target};`;
+    db.query(query,(err,db_data)=>{
+      if(err) reject("db_err");
+      resolve(db_data);
+    })
+  })
+}
 
 module.exports = {
   challengeInsertDAO,
@@ -99,4 +117,5 @@ module.exports = {
   zoominChallengeDAO,
   imageChallengeDAO,
   uploadChallengeDAO,
+  checkUCI
 };

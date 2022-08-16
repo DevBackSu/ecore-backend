@@ -168,14 +168,22 @@ async function upload(req, res, next) {
     let upload_data;
     if (type == "daily")
       upload_data = await commonDailyDAO.uploadDailyDAO(target, img);
-    // else if (type == "challenge")
-      // upload_data = await commonChallengeDAO.uploadChallengeDAO(target, img);
-    else if (type == "campaign"){
-      var uci = await commonCampaignDAO.uploadCampaignDAO(target, permission.USER_ID);
-      console.log(uci[1][0].user_campaign_id)
-      upload_data = await commonCampaignDAO.insertCampaignImageDAO(uci[1][0].user_campaign_id, img);
-    }
-    else throw "존재하지 않는 타입입니다.";
+    else if (type == "challenge") {
+      const tmp = await commonChallengeDAO.checkUCI(target, permission.USER_ID);
+      if (tmp[0] == undefined) throw "사용자의 user_challenge_id가 아닙니다.";
+      else if (tmp[0].is_challenging == 0) throw "종료된 도전입니다.";
+      upload_data = await commonChallengeDAO.uploadChallengeDAO(target, img);
+    } else if (type == "campaign") {
+      var uci = await commonCampaignDAO.uploadCampaignDAO(
+        target,
+        permission.USER_ID
+      );
+      console.log(uci[1][0].user_campaign_id);
+      upload_data = await commonCampaignDAO.insertCampaignImageDAO(
+        uci[1][0].user_campaign_id,
+        img
+      );
+    } else throw "존재하지 않는 타입입니다.";
     res.json({
       Message: "성공",
       Data: upload_data,
