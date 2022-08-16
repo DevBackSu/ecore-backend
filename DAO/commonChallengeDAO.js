@@ -80,7 +80,7 @@ function imageChallengeDAO(count, target, user_id, challenge_id) {
         query = `SELECT ci.challenge_image_id AS img_id, c.title AS title, ci.challenge_img AS img, ci.challenge_date AS date, SUM(ci.challenge_good)AS good, EXISTS(SELECT * FROM challenge_review WHERE cr.user_challenge_id = uc.user_challenge_id) AS is_review FROM challenge_image ci LEFT JOIN user_challenge uc ON ci.user_challenge_id = uc.user_challenge_id LEFT JOIN challenge c ON uc.challenge_id = c.challenge_id LEFT JOIN challenge_review cr ON cr.user_challenge_id = uc.user_challenge_id WHERE uc.user_id = ${user_id} GROUP BY uc.user_challenge_id;`;
       else
         query = `SELECT ci.challenge_image_id AS img_id, c.title AS title, ci.challenge_img AS img, ci.challenge_date AS date, ci.challenge_good AS good FROM challenge_image ci LEFT JOIN user_challenge uc ON ci.user_challenge_id = uc.user_challenge_id LEFT JOIN challenge c ON uc.challenge_id = c.challenge_id WHERE uc.user_id = ${target};`;
-    }
+    } else throw "count 값을 확인해주세요.";
     console.log(query);
     db.query(query, (err, db_data) => {
       if (err) reject("db_err");
@@ -92,21 +92,21 @@ function imageChallengeDAO(count, target, user_id, challenge_id) {
 function uploadChallengeDAO(target, img) {
   return new Promise((resolve, reject) => {
     const query = `INSERT INTO challenge_image(user_challenge_id, challenge_img) VALUE(${target},"${img}");`;
-    db.query(query,(err,db_data)=>{
-      if(err) reject("db_err");
+    db.query(query, (err, db_data) => {
+      if (err) reject("db_err");
       resolve(db_data);
-    })
-  })
+    });
+  });
 }
 
-function checkUCI(target, user_id){
+function checkUCI(target, user_id) {
   return new Promise((resolve, reject) => {
     const query = `SELECT is_challenging FROM user_challenge WHERE user_id = ${user_id} AND user_challenge_id = ${target};`;
-    db.query(query,(err,db_data)=>{
-      if(err) reject("db_err");
+    db.query(query, (err, db_data) => {
+      if (err) reject("db_err");
       resolve(db_data);
-    })
-  })
+    });
+  });
 }
 
 module.exports = {
@@ -117,5 +117,5 @@ module.exports = {
   zoominChallengeDAO,
   imageChallengeDAO,
   uploadChallengeDAO,
-  checkUCI
+  checkUCI,
 };
