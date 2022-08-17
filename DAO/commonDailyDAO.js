@@ -101,7 +101,27 @@ function imageDailyDAO(count, target, user_id) {
   });
 }
 
-function uploadDailyDAO(target, img) {}
+function uploadDailyDAO(target, img) {
+  return new Promise((resolve, reject) => {
+    const query = `INSERT INTO daily_image(user_daily_challenge_id, daily_img) VALUE(${target}, "${img}");`;
+    db.query(query, (err, db_data) => {
+      if (err) reject("db_err");
+      resolve(db_data);
+    });
+  });
+}
+
+function insertUDC(user_id) {
+  return new Promise((resolve, reject) => {
+    const d = new Date();
+    const query = `INSERT INTO user_daily_challenge(user_id, daily_challenge_id) VALUE(${user_id}, ${d.getDay()});`;
+    db.query(query, (err, db_data) => {
+      if (err) reject("db_err");
+      console.log(db_data);
+      resolve(db_data);
+    });
+  });
+}
 
 module.exports = {
   daily_idDAO,
@@ -112,4 +132,5 @@ module.exports = {
   zoominDailyDAO,
   imageDailyDAO,
   uploadDailyDAO,
+  insertUDC,
 };

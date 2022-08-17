@@ -13,6 +13,8 @@ var dailychallengeRouter = require("./routes/dailychallenge");
 var campaignRouter = require("./routes/campaign");
 var fileRouter = require("./routes/file");
 
+const {task} = require('./middleware/corn');
+
 var app = express();
 
 // // view engine setup
