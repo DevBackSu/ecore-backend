@@ -3,7 +3,6 @@
 const cronCampaignDAO = require("../DAO/cronCampaignDAO");
 const cronDAO = require("../DAO/cronDAO");
 const cronChallengeDAO = require("../DAO/cronChallengeDAO");
-const { challengeDeleteDAO } = require("../DAO/commonChallengeDAO");
 
 async function cronTestController(req, res, next){
     try{
@@ -63,9 +62,6 @@ async function campaignProcess(req, res, next){
 
 module.exports = {
     cronTestController,
-<<<<<<< HEAD
-    campaignProcess
-=======
+    campaignProcess,
     challengeProcess
->>>>>>> 220972b7b6e9cd0a6e26783a3f6e976efe806b61
 }
