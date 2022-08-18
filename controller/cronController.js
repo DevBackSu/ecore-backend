@@ -44,17 +44,13 @@ async function challengeProcess(req, res, next){
 
 async function campaignProcess(req, res, next){
     var campaign_data;
-    try{
-        const end_date = await cronCampaignDAO.selectCampaignDAO();
-        console.log(end_date === undefined)
-        if(end_date !== undefined){
-            const user_data = await cronCampaignDAO.selectUser_idDAO(end_date[0].end_date);
-            for(var i = 0; i < user_data.length; i++){
-                campaign_data = await cronCampaignDAO.cronCampaignDAO(user_data[i].user_id);
-            }
-            console.log(campaign_data);
-        }
-        else {console.log("캠페인 보상 업로드 날짜가 아닙니다.");}
+    const d = new Date();
+    try{        
+        const temp = new Date(d.setDate(d.getDate()-1)).toISOString().split("T")[0];
+        const selectCampaignDAO_data = await cronCampaignDAO.selectCampaignDAO(temp);
+        if(selectCampaignDAO_data[0]==undefined);
+        else cronCampaignDAO.selectUser_idDAO(selectCampaignDAO_data);
+        console.log("campaignProcess done");
     }
     catch(err){
         console.log("DB ERR");

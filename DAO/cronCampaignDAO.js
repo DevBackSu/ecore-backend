@@ -1,29 +1,33 @@
 const db = require("../db/db_info");
 
-// 가장 최근 end_date 구하기 (and end_date = now())
-function selectCampaignDAO(){
+// 어제 날짜에 끝난 end_date의 캠페인 가져오기
+function selectCampaignDAO(day){
     return new Promise((resolve, reject) => {
-        const d = new Date();
-        const sql = `select end_date from campaign
-        where start_date <= "${d.getFullYear()}-${d.getMonth()+1}-${d.getDate()}" and "${d.getFullYear()}-${d.getMonth()+1}-${d.getDate()}" <= end_date and end_date = "${d.getFullYear()}-${d.getMonth()+1}-${d.getDate()}"
-        order by end_date limit 1;`;
+        const sql = `SELECT c.campaign_reward, uc.user_id  FROM campaign c LEFT JOIN user_campaign uc ON uc.campaign_id = c.campaign_id  WHERE end_date = "${day}";`;
+        var res_data = [];
         db.query(sql, (error, db_data) => {
             if(error){
+                console.log(error);
                 reject("DB ERR");
             }
-            resolve(db_data);
+            db_data.forEach((element)=>{
+                res_data.push([element.campaign_reward, element.user_id]);
+            })
+            resolve(res_data);
         })
     })
 }
 
 // 캠페인 참여 중인 user_id 구하기
-function selectUser_idDAO(end_date){
+function selectUser_idDAO(info){
     return new Promise((resolve, reject) => {
-        const d = new Date();
-        const sql = `select uc.user_id from campaign c
-        left join user_campaign uc on uc.campaign_id = c.campaign_id
-        where start_date <= "${d.getFullYear()}-${d.getMonth()+1}-${d.getDate()}" and "${d.getFullYear()}-${d.getMonth()+1}-${d.getDate()}" <= end_date and end_date = "${end_date}";`;
-        db.query(sql, (error, db_data) => {
+        var mysql = require("mysql");
+        var querys = "";
+        const query = "UPDATE user u SET u.total_score = u.total_score+? WHERE u.user_id = ?;"
+        info.forEach((element)=>{
+            querys += mysql.format(query,element);
+        })
+        db.query(querys, (error, db_data) => {
             if(error){
                 reject("DB ERR");
             }
