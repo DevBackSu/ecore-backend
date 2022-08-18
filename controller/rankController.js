@@ -26,7 +26,7 @@ async function myrank(req, res, next) {
   try {
     if (jwt_token == undefined) throw "로그인 정보가 없습니다.";
     const permission = await jwtmiddle.jwtCerti(jwt_token);
-    const myrank = await rankDAO.myrank(permission.USER_ID);
+    const myrank = await rankDAO.myrank(permission.NAME);
     res.json({
       Message: "성공",
       Data: myrank,
