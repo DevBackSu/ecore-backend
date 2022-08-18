@@ -5,24 +5,6 @@ const cronDAO = require("../DAO/cronDAO");
 const cronChallengeDAO = require("../DAO/cronChallengeDAO");
 const cronDailyDAO = require("../DAO/cronDailyDAO");
 
-async function cronTestController(req, res, next){
-    try{
-        const test = await cronDAO.cronTestDAO();
-        console.log(test);
-        // res.json({
-        //     Message : "성공",
-        //     Data : test
-        // })
-    }
-    catch(err){
-        // res.json({
-        //     Message : "err",
-        //     Err : err
-        // })
-        console.log(err);
-    }
-}
-
 async function dailyProcess(req, res, next){
     try{
         const checkfinishedDaily_data = await cronDailyDAO.checkfinishedDaily();
@@ -66,7 +48,6 @@ async function campaignProcess(req, res, next){
 }
 
 module.exports = {
-    cronTestController,
     campaignProcess,
     challengeProcess,
     dailyProcess
