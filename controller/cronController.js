@@ -46,6 +46,7 @@ async function campaignProcess(req, res, next){
     var campaign_data;
     try{
         const end_date = await cronCampaignDAO.selectCampaignDAO();
+        console.log(end_date === undefined)
         if(end_date !== undefined){
             const user_data = await cronCampaignDAO.selectUser_idDAO(end_date[0].end_date);
             for(var i = 0; i < user_data.length; i++){
@@ -53,7 +54,7 @@ async function campaignProcess(req, res, next){
             }
             console.log(campaign_data);
         }
-        console.log("캠페인 보상 업로드 날짜가 아닙니다.");
+        else {console.log("캠페인 보상 업로드 날짜가 아닙니다.");}
     }
     catch(err){
         console.log("DB ERR");
