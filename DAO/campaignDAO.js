@@ -4,7 +4,9 @@ const db = require("../db/db_info");
 
 function campaignDAO(){
   return new Promise(function(resolve, reject){
-    const sql = `SELECT campaign_id ,title, start_date, end_date, detail, poster_img, campaign_reward from campaign c ;`;
+    const d = new Date();
+    const sql = `SELECT campaign_id ,title, start_date, end_date, detail, poster_img, campaign_reward from campaign c
+    WHERE c.start_date <= "${d.getFullYear()}-${d.getMonth()+1}-${d.getDate()}" and "${d.getFullYear()}-${d.getMonth()+1}-${d.getDate()}" <= c.end_date ;`;
     db.query(sql, function(error, db_data){
       if(error){
         reject("DB ERR");
