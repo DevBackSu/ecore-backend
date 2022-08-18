@@ -8,7 +8,7 @@ function rank(type, user_id) {
     if (type == "all") {
       query = `SELECT u.name, u.total_score, u.profile_img FROM user u ORDER BY u.total_score DESC`;
     } else if (type == "following") {
-      query = `SELECT u.name, u.total_score, u.profile_img FROM user u WHERE u.user_id IN (SELECT f.user_id2 from follow f WHERE f.user_id = ${user_id}) ORDER BY u.total_score DESC;`;
+      query = `SELECT u.name, u.total_score, u.profile_img FROM user u WHERE u.user_id IN (SELECT f.user_id2 from follow f WHERE f.user_id = ${user_id}) OR u.user_id = ${user_id} ORDER BY u.total_score DESC;`;
     } else throw "타입을 확인해주세요";
     console.log(query);
     db.query(query, (err, db_data) => {
