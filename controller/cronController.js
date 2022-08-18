@@ -3,6 +3,7 @@
 const cronCampaignDAO = require("../DAO/cronCampaignDAO");
 const cronDAO = require("../DAO/cronDAO");
 const cronChallengeDAO = require("../DAO/cronChallengeDAO");
+const cronDailyDAO = require("../DAO/cronDailyDAO");
 
 async function cronTestController(req, res, next){
     try{
@@ -23,7 +24,14 @@ async function cronTestController(req, res, next){
 }
 
 async function dailyProcess(req, res, next){
-
+    try{
+        const checkfinishedDaily_data = await cronDailyDAO.checkfinishedDaily();
+        if(checkfinishedDaily_data[0]==undefined);
+        else await cronDailyDAO.completeDaily(checkfinishedDaily_data);
+        console.log("dailyProcess done");
+    }catch(err){
+        console.log(err);
+    }
 }
 
 async function challengeProcess(req, res, next){
@@ -60,5 +68,6 @@ async function campaignProcess(req, res, next){
 module.exports = {
     cronTestController,
     campaignProcess,
-    challengeProcess
+    challengeProcess,
+    dailyProcess
 }

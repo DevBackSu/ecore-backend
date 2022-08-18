@@ -6,6 +6,7 @@ const task = cron.schedule("*/10 * * * * *", () => {
     console.log("실행 : " + time);
     const b = cronController.campaignProcess();
     cronController.challengeProcess();
+    cronController.dailyProcess();
 })
 
 module.exprets = {
