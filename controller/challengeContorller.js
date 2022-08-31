@@ -111,18 +111,16 @@ async function challengeMyDetail(req, res, next) {
 }
 
 async function challengeReview(req, res, next) {
-  const challenge_id = req.body.challenge_id;
+  const user_challenge_id = req.body.user_challenge_id;
   const review_content = req.body.review_content;
   const jwt_token = req.headers.jwt_token;
   try {
     if (jwt_token == undefined) throw "로그인 정보가 없습니다.";
-    const permission = await jwtmiddle.jwtCerti(jwt_token);
     const challenge_data = await challengeDAO.challengeImage(
-      challenge_id,
-      permission.USER_ID
+      user_challenge_id
     );
     const review_data = await challengeDAO.challengeReview(
-      challenge_data.user_challenge_id,
+      user_challenge_id,
       review_content,
       challenge_data.challenge_img
     );

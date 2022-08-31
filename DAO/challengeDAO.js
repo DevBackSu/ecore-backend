@@ -108,9 +108,9 @@ function challengeMyDetail(user_challenge_id) {
   });
 }
 
-function challengeImage(challenge_id, USER_ID) {
+function challengeImage(user_challenge_id) {
   return new Promise((resolve, reject) => {
-    const query = `SELECT ci.user_challenge_id, ci.challenge_img FROM challenge_image ci WHERE ci.user_challenge_id IN (SELECT uc.user_challenge_id FROM user_challenge uc WHERE uc.challenge_id=${challenge_id} AND uc.user_id=${USER_ID}) LIMIT 1`;
+    const query = `SELECT ci.challenge_img FROM challenge_image ci WHERE ci.user_challenge_id = ${user_challenge_id} LIMIT 1`;
     db.query(query, (err, db_data) => {
       if (err) {
         console.log(err);
@@ -118,7 +118,6 @@ function challengeImage(challenge_id, USER_ID) {
       } else {
         const res_data = {
           challenge_img: db_data[0]["challenge_img"],
-          user_challenge_id: db_data[0]["user_challenge_id"],
         };
         resolve(res_data);
       }
@@ -128,7 +127,6 @@ function challengeImage(challenge_id, USER_ID) {
 
 function challengeReview(user_challenge_id, review_content, challenge_img) {
   return new Promise((resolve, reject) => {
-    console.log(user_challenge_id, review_content, challenge_img);
     const query = `INSERT INTO challenge_review(user_challenge_id, review_content, review_img) VALUE(${user_challenge_id}, "${review_content}", "${challenge_img}");`;
     db.query(query, (err, db_data) => {
       if (err) {
