@@ -73,6 +73,7 @@ function imageChallengeDAO(count, target, user_id, challenge_id) {
     let query;
     if (count == "one") {
       if (target != null) throw "target is not null";
+      if ( challenge_id == null) throw "id is null";
       query = `SELECT ci.challenge_image_id AS img_id, c.title AS title, ci.challenge_img AS img, ci.challenge_date AS date, ci.challenge_good AS good FROM challenge_image ci LEFT JOIN user_challenge uc ON ci.user_challenge_id = uc.user_challenge_id LEFT JOIN challenge c ON uc.challenge_id = c.challenge_id WHERE c.challenge_id = ${challenge_id} AND NOT uc.user_id = ${user_id} ORDER BY RAND() LIMIT 1;`;
     } else if (count == "all") {
       if (target == null) throw "target is null";

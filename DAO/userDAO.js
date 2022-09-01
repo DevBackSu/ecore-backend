@@ -3,7 +3,6 @@
 const { query } = require("express");
 const db = require("../db/db_info");
 
-//
 function profileUploadDAO(parameter, filename) {
   return new Promise(function (resolve, reject) {
     const sql = `UPDATE user set profile_img = '${filename}' where user_id = ${parameter};`;
@@ -24,9 +23,24 @@ function profileDeleteDAO(parameter) {
       if (error) {
         reject("DB ERR");
       }
+
       resolve(db_data);
     });
   });
+}
+
+
+function selectUserImgDAO(user_id){
+  return new Promise((resolve, reject) => {
+    const sql = `select profile_img from user where user_id = ${user_id};`;
+    db.query(sql, (error, db_data) => {
+      if(error){
+        reject("DB ERR");
+      }
+      console.log(db_data);
+      resolve(db_data);
+    })
+  })
 }
 
 function existCheck(name) {
@@ -140,6 +154,7 @@ function followSearch(name) {
 module.exports = {
   profileUploadDAO,
   profileDeleteDAO,
+  selectUserImgDAO,
   existCheck,
   userInfo,
   badge,
