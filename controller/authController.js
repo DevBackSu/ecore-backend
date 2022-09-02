@@ -1,6 +1,7 @@
 "use strict";
 const jwtmiddle = require("../middleware/jwt");
 const authDAO = require("../DAO/authDAO");
+const badgeDAO = require("../DAO/badgeDAO");
 
 async function Test(req, res, next) {
   try {
@@ -46,6 +47,7 @@ async function register(req, res, next) {
 
   const jwtToken = await jwtmiddle.jwtCreate(userData);
   const resData = await authDAO.insert_jwt(userData.USER_ID, jwtToken);
+  await badgeDAO.registerBadge(userData.USER_ID);
   
   const jwtData = {
     "success": true,
