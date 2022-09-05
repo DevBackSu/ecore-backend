@@ -64,7 +64,7 @@ function userInfo(user_id) {
       if (err) reject("db_err");
       var res_data = db_data[0][0];
       res_data["following"] = db_data[1][0]["following"];
-      res_data["follwer"] = db_data[2][0]["follower"];
+      res_data["follower"] = db_data[2][0]["follower"];
       console.log(res_data);
       resolve(res_data);
     });
