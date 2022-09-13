@@ -163,7 +163,9 @@ async function image(req, res, next) {
 
 async function upload(req, res, next) {
   var jwt_token = req.headers.jwt_token;
-  const { type, target, img } = req.body;
+  const type = req.body.type;
+  const target = req.body.target;
+  const img = req.file.originalname
   try {
     if (jwt_token == undefined) {
       throw "로그인 정보가 없습니다.";
