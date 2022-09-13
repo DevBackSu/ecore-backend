@@ -15,7 +15,12 @@ function cronTestDAO() {
 function checkFinishedChallenge() {
   return new Promise((resolve, reject) => {
     const d = new Date();
-    const query = `SELECT uc.user_challenge_id, count(ci.challenge_image_id) AS img_cnt, c.achievement_condition FROM user_challenge uc LEFT JOIN challenge c ON uc.challenge_id = c.challenge_id LEFT JOIN challenge_image ci ON uc.user_challenge_id = ci.user_challenge_id WHERE uc.is_challenging = 1 AND DATE_ADD(uc.start_date, INTERVAL c.term DAY) = "${d.getFullYear()}${("0" +(d.getMonth() + 1)).slice(-2)}${("0" + d.getDate()).slice(-2)}" GROUP BY uc.user_challenge_id ;`;
+    const query = `SELECT uc.user_challenge_id, count(ci.challenge_image_id) AS img_cnt, c.achievement_condition FROM user_challenge uc LEFT JOIN challenge c ON uc.challenge_id = c.challenge_id LEFT JOIN challenge_image ci ON uc.user_challenge_id = ci.user_challenge_id WHERE uc.is_challenging = 1 AND DATE_ADD(uc.start_date, INTERVAL c.term DAY) = "${d.getFullYear()}${(
+      "0" +
+      (d.getMonth() + 1)
+    ).slice(-2)}${("0" + d.getDate()).slice(
+      -2
+    )}" GROUP BY uc.user_challenge_id ;`;
     var res_data = {
       faildUCI: [],
       successUCI: [],
@@ -77,10 +82,40 @@ function completeChallenge(info) {
   });
 }
 
+function checkUserChallengeDone(info) {
+  return new Promise((resolve, reject) => {
+    var mysql = require("mysql");
+    var querys = "";
+    var res_data = {
+      zeroChallenge: [],
+      nineChallenge: [],
+    };
+    const query =
+      "SELECT u.user_id, u.challenge_done FROM user u LEFT JOIN user_challenge uc ON u.user_id = uc.user_id WHERE uc.user_challenge_id = ?;";
+    info.forEach((element) => {
+      querys += mysql.format(query, Number(element));
+    });
+    console.log(querys);
+    db.query(querys, (err, db_data) => {
+      if (err) reject(err);
+      console.log(db_data);
+      db_data.forEach((element) => {
+        if (element[0].challenge_done == 0)
+          res_data.zeroChallenge.push(element[0].user_id);
+        else if (element[0].challenge_done == 9)
+          res_data.nineChallenge.push(element[0].user_id);
+      });
+      console.log(res_data);
+      resolve(res_data);
+    });
+  });
+}
+
 module.exports = {
   cronTestDAO,
   checkFinishedChallenge,
   deleteFailtUC,
   checkReward,
   completeChallenge,
+  checkUserChallengeDone,
 };

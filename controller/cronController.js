@@ -4,12 +4,18 @@ const cronCampaignDAO = require("../DAO/cronCampaignDAO");
 const cronDAO = require("../DAO/cronDAO");
 const cronChallengeDAO = require("../DAO/cronChallengeDAO");
 const cronDailyDAO = require("../DAO/cronDailyDAO");
+const badgeDAO = require("../DAO/badgeDAO");
 
 async function dailyProcess(req, res, next){
     try{
         const checkfinishedDaily_data = await cronDailyDAO.checkfinishedDaily();
         if(checkfinishedDaily_data[0]==undefined);
-        else await cronDailyDAO.completeDaily(checkfinishedDaily_data);
+        else {
+            var badge_list_data = await cronDailyDAO.checkDailyDone(checkfinishedDaily_data);
+            if (badge_list_data.zeroDaily[0]!=undefined) await badgeDAO.oneDailyBadge(badge_list_data.zeroDaily)
+            if (badge_list_data.nineDaily[0]!=undefined) await badgeDAO.tenDailyBadge(badge_list_data.nineDaily)
+            await cronDailyDAO.completeDaily(checkfinishedDaily_data);
+        }
         console.log("dailyProcess done");
     }catch(err){
         console.log(err);
@@ -23,6 +29,9 @@ async function challengeProcess(req, res, next){
         else await cronChallengeDAO.deleteFailtUC(checkFinishedChallenge_data.faildUCI);
         if (checkFinishedChallenge_data.successUCI[0] == undefined);
         else{ 
+            var badge_list_data = await cronChallengeDAO.checkUserChallengeDone(checkFinishedChallenge_data.successUCI);
+            if(badge_list_data.zeroChallenge[0]!=undefined) await badgeDAO.oneChallengeBadge(badge_list_data.zeroChallenge);
+            if(badge_list_data.nineChallenge[0]!=undefined) await badgeDAO.tenChallengeBadge(badge_list_data.nineChallenge);
             var checkReward_data = await cronChallengeDAO.checkReward(checkFinishedChallenge_data.successUCI);
             await cronChallengeDAO.completeChallenge(checkReward_data);
         }

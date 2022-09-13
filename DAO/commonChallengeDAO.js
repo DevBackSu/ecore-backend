@@ -53,11 +53,12 @@ function reportChallengeDAO(img_id) {
   });
 }
 
-function zoominChallengeDAO(img_id) {
+function zoominChallengeDAO(img_id, user_id) {
   return new Promise(function (resolve, reject) {
-    const sql = `select u.user_id, u.name, ci.challenge_img as is_good from challenge_image ci
+    const sql = `select u.user_id, u.name, COUNT(IF(cl.user_id=${user_id},1,null)) as is_good from challenge_image ci
     left join user_challenge uc on uc.user_challenge_id = ci.user_challenge_id
-    left join user u on u.user_id = uc.user_id 
+    left join user u on u.user_id = uc.user_id
+    left join challenge_like cl ON cl.challenge_image_id = ci.challenge_image_id 
     where ci.challenge_image_id = ${img_id};`;
     db.query(sql, function (error, db_data) {
       if (error) {

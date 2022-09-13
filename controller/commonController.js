@@ -102,10 +102,11 @@ async function zoomin(req, res, next) {
   let zoomin_data;
   try {
     if (jwt_token == undefined) throw "로그인 정보가 없습니다.";
+    const permission = await jwtmiddle.jwtCerti(jwt_token);
     if (type == "daily") {
-      zoomin_data = await commonDailyDAO.zoominDailyDAO(img_id);
+      zoomin_data = await commonDailyDAO.zoominDailyDAO(img_id, permission.USER_ID);
     } else if (type == "challenge") {
-      zoomin_data = await commonChallengeDAO.zoominChallengeDAO(img_id);
+      zoomin_data = await commonChallengeDAO.zoominChallengeDAO(img_id, permission.USER_ID);
     } else {
       throw "존재하지 않는 타입입니다.";
     }
