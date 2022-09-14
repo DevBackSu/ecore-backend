@@ -52,7 +52,6 @@ function oneDailyBadge(user_id) {
     user_id.forEach((element) => {
       querys += mysql.format(query, element);
     });
-    console.log(querys);
     db.query(querys, (err, db_data) => {
       if (err) reject(err);
       resolve(db_data);
@@ -60,13 +59,13 @@ function oneDailyBadge(user_id) {
   });
 }
 
-function tenDailyBadge(user_id) {return new Promise((resolve, reject) => {
+function tenDailyBadge(user_id) {
+  return new Promise((resolve, reject) => {
     var querys = "";
     const query = `INSERT INTO user_badge(user_id, badge_id) VALUE(?, 5);`;
     user_id.forEach((element) => {
       querys += mysql.format(query, element);
     });
-    console.log(querys);
     db.query(querys, (err, db_data) => {
       if (err) reject(err);
       resolve(db_data);

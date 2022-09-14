@@ -48,17 +48,22 @@ async function checkDailyDone(info) {
     info.forEach((element) => {
       querys += mysql.format(query, element[1]);
     });
-    console.log(querys);
     db.query(querys, (err, db_data) => {
       if (err) reject(err);
-      db_data.forEach((element) => {
-        console.log(element);
-        if (element[0].daily_challenge_done == 0)
-          res_data.zeroDaily.push(element[0].user_id);
-        else if (element[0].daily_challenge_done == 9)
-          res_data.nineDaily.push(element[0].user_id);
-      });
-      console.log(res_data);
+      if (Array.isArray(db_data[0])) {
+        db_data.forEach((element) => {
+          if (element[0].daily_challenge_done == 0)
+            res_data.zeroDaily.push(element[0].user_id);
+          else if (element[0].daily_challenge_done == 9)
+            res_data.nineDaily.push(element[0].user_id);
+        });  
+      }
+      else{
+        if (db_data[0].daily_challenge_done == 0)
+            res_data.zeroDaily.push(db_data[0].user_id);
+          else if (db_data[0].daily_challenge_done == 9)
+            res_data.nineDaily.push(db_data[0].user_id);
+      }
       resolve(res_data);
     });
   });

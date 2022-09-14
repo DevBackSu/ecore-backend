@@ -1,17 +1,5 @@
 const db = require("../db/db_info");
 
-function cronTestDAO() {
-  return new Promise((resolve, reject) => {
-    const sql = `select * from badge;`;
-    db.query(sql, (error, db_data) => {
-      if (error) {
-        reject("DB ERR");
-      }
-      resolve(db_data);
-    });
-  });
-}
-
 function checkFinishedChallenge() {
   return new Promise((resolve, reject) => {
     const d = new Date();
@@ -95,16 +83,22 @@ function checkUserChallengeDone(info) {
     info.forEach((element) => {
       querys += mysql.format(query, Number(element));
     });
-    console.log(querys);
     db.query(querys, (err, db_data) => {
       if (err) reject(err);
-      console.log(db_data);
-      db_data.forEach((element) => {
-        if (element[0].challenge_done == 0)
-          res_data.zeroChallenge.push(element[0].user_id);
-        else if (element[0].challenge_done == 9)
-          res_data.nineChallenge.push(element[0].user_id);
-      });
+      if (Array.isArray(db_data[0])) {
+        db_data.forEach((element) => {
+          if (element[0].challenge_done == 0)
+            res_data.zeroChallenge.push(element[0].user_id);
+          else if (element[0].challenge_done == 9)
+            res_data.nineChallenge.push(element[0].user_id);
+        });    
+      }
+      else{
+        if (db_data[0].challenge_done == 0)
+            res_data.zeroChallenge.push(db_data[0].user_id);
+          else if (db_data[0].challenge_done == 9)
+            res_data.nineChallenge.push(db_data[0].user_id);
+      }
       console.log(res_data);
       resolve(res_data);
     });
@@ -112,7 +106,6 @@ function checkUserChallengeDone(info) {
 }
 
 module.exports = {
-  cronTestDAO,
   checkFinishedChallenge,
   deleteFailtUC,
   checkReward,
