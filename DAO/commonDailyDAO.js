@@ -42,9 +42,7 @@ function dailylikeDAO(daily, user_id) {
 function likeUpdateDAO(img_id) {
   //daily_image 테이블 update
   return new Promise(function (resolve, reject) {
-    const sql = `update daily_image
-    set daily_good = (select count(daily_like_id) from daily_like)
-    where user_daily_challenge_id = ${img_id};`;
+    const sql = `update daily_image set daily_good = (SELECT count(dl.daily_like_id) FROM daily_like dl LEFT JOIN daily_image di ON dl.user_daily_challenge_id=di.user_daily_challenge_id WHERE di.daily_image_id=${img_id}) WHERE daily_image_id = ${img_id};`;
     db.query(sql, function (error, db_data) {
       if (error) {
         reject("DB ERR");
