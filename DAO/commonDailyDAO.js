@@ -15,6 +15,16 @@ function daily_idDAO(img_id) {
   });
 }
 
+function dailylikecheck(udc,user_id){
+  return new Promise((resolve, reject) => {
+    const sql = `SELECT COUNT(dl.daily_like_id) AS cnt FROM daily_like dl WHERE dl.user_id =${user_id} AND dl.user_daily_challenge_id =${udc};`;
+    db.query(sql, (err, db_data)=>{
+      if(err)reject("db_err");
+      resolve(db_data);
+    })
+  })
+}
+
 function dailylikeDAO(daily, user_id) {
   //daily_like 테이블에 insert
   return new Promise(function (resolve, reject) {
@@ -126,6 +136,7 @@ function insertUDC(user_id) {
 
 module.exports = {
   daily_idDAO,
+  dailylikecheck,
   likeUpdateDAO,
   dailylikeDAO,
   dailyDeleteDAO,
