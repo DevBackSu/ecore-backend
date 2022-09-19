@@ -2,6 +2,16 @@
 
 const db = require("../db/db_info");
 
+function challengeCheckLike(img_id, user_id){
+  return new Promise((resolve, reject) => {
+    const sql = `SELECT COUNT(cl.challenge_like_id) AS cnt FROM challenge_like cl WHERE cl.challenge_image_id =${img_id} AND cl.user_id = ${user_id};`;
+    db.query(sql, (err, db_data)=>{
+      if(err) reject("db_err");
+      resolve(db_data);
+    })
+  })
+}
+
 function challengeInsertDAO(img_id, user_id) {
   return new Promise(function (resolve, reject) {
     const sql = `insert into challenge_like (challenge_image_id, user_id)
@@ -18,7 +28,7 @@ function challengeInsertDAO(img_id, user_id) {
 function likeUpdateDAO(img_id) {
   return new Promise(function (resolve, reject) {
     const sql = `update challenge_image
-        set challenge_good = (select count(challenge_like_id) from challenge_like)
+        set challenge_good = (select count(challenge_like_id) from challenge_like where challenge_image_id = ${img_id})
         where challenge_image_id = ${img_id};`;
     db.query(sql, function (error, db_data) {
       if (error) {
@@ -112,6 +122,7 @@ function checkUCI(target, user_id) {
 }
 
 module.exports = {
+  challengeCheckLike,
   challengeInsertDAO,
   likeUpdateDAO,
   challengeDeleteDAO,

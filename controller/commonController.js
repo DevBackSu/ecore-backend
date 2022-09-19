@@ -20,6 +20,8 @@ async function like(req, res, next) {
       await commonDailyDAO.dailylikeDAO(daily, permission.USER_ID);
       like_data = await commonDailyDAO.likeUpdateDAO(img_id);
     } else if (type == "challenge") {
+      const like_check_data= await commonChallengeDAO.challengeCheckLike(img_id,permission.USER_ID);
+      if(like_check_data.cnt!=0) throw "이미 좋아요를 누른 사진입니다.";
       await commonChallengeDAO.challengeInsertDAO(img_id, permission.USER_ID);
       like_data = await commonChallengeDAO.likeUpdateDAO(img_id);
     } else {
