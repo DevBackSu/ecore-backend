@@ -89,7 +89,7 @@ function imageChallengeDAO(count, target, user_id, challenge_id) {
     } else if (count == "all") {
       if (target == null) throw "target is null";
       if (target == user_id)
-        query = `SELECT ci.challenge_image_id AS img_id, c.title AS title, ci.challenge_img AS img, ci.challenge_date AS date, SUM(ci.challenge_good)AS good, EXISTS(SELECT * FROM challenge_review WHERE cr.user_challenge_id = uc.user_challenge_id) AS is_review FROM challenge_image ci LEFT JOIN user_challenge uc ON ci.user_challenge_id = uc.user_challenge_id LEFT JOIN challenge c ON uc.challenge_id = c.challenge_id LEFT JOIN challenge_review cr ON cr.user_challenge_id = uc.user_challenge_id WHERE uc.user_id = ${user_id} AND uc.is_challenging = 0 GROUP BY uc.user_challenge_id;`;
+        query = `SELECT uc.user_challenge_id, ci.challenge_image_id AS img_id, c.title AS title, ci.challenge_img AS img, ci.challenge_date AS date, SUM(ci.challenge_good)AS good, EXISTS(SELECT * FROM challenge_review WHERE cr.user_challenge_id = uc.user_challenge_id) AS is_review FROM challenge_image ci LEFT JOIN user_challenge uc ON ci.user_challenge_id = uc.user_challenge_id LEFT JOIN challenge c ON uc.challenge_id = c.challenge_id LEFT JOIN challenge_review cr ON cr.user_challenge_id = uc.user_challenge_id WHERE uc.user_id = ${user_id} AND uc.is_challenging = 0 GROUP BY uc.user_challenge_id;`;
       else
         query = `SELECT ci.challenge_image_id AS img_id, c.title AS title, ci.challenge_img AS img, ci.challenge_date AS date, ci.challenge_good AS good FROM challenge_image ci LEFT JOIN user_challenge uc ON ci.user_challenge_id = uc.user_challenge_id LEFT JOIN challenge c ON uc.challenge_id = c.challenge_id WHERE uc.user_id = ${target};`;
     } else throw "count 값을 확인해주세요.";

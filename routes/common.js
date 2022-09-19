@@ -3,8 +3,9 @@
 const express = require("express");
 const router = express.Router();
 const commonController = require("../controller/commonController");
+const uploads = require("../middleware/multer");
 
-router.post("/upload", commonController.upload); //사진 등록
+router.post("/upload", uploads.upload.single("img"),commonController.upload); //사진 등록
 
 router.get("/image", commonController.image); //사진 불러오기
 
